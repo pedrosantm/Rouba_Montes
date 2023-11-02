@@ -34,3 +34,27 @@ void empilhar(pilha *baralho, carta carta) {
     }
 }
 
+void embaralharPilha(pilha *baralho) {
+    
+    srand(time(NULL));
+    
+    // Embaralha a pilha 
+    for (int i = baralho->topo; i > 0; i--) {
+        int j = rand() % (i + 1);
+        carta temp = baralho->cartas[i];
+        baralho->cartas[i] = baralho->cartas[j];
+        baralho->cartas[j] = temp;
+    }
+}
+
+void printPilha(pilha *baralho, int max) {
+
+    int aux = baralho->topo;
+
+    for(int i = 0; i < max; i++){
+        printf("|| %d %c||\n", baralho->cartas->numero[aux], baralho->cartas->nipe);
+        aux--;
+    }
+
+    return ;
+}

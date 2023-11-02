@@ -32,5 +32,15 @@ int main() {
         jogadores[i].numero_de_cartas = 0; //número de cartas de cada jogador
     }
 
+
+    for(int i = 0; i < 52; i++) {
+        for (int numero = 1; numero <= 13; numero++) {
+            for (char nipe = 'P'; nipe <= 'E'; nipe++) {
+                carta carta = {numero, nipe};
+                 empilhar(&baralho, carta);
+            }
+        }
+}
+
     return 0;
 }
