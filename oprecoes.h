@@ -63,8 +63,24 @@ void embaralharPilha(pilha *baralho) {
 
 void empilhar_baralho(pilha *baralho, carta carta) {
     if (baralho->topo < 52 - 1) {
-        baralho->cartas[++(baralho->topo)] = carta;
+        baralho->cartas[baralho->topo] = carta;
+        baralho->topo++;
     }
     return ;
 }
 
+
+carta desempilhar_baralho(pilha *baralho){
+    baralho->topo--;
+    return baralho->cartas[baralho->topo];
+}
+
+void insere_lista(lista* l, carta c){
+    elemento* novo = (elemento*)malloc(sizeof(elemento));
+    novo->carta = c;    
+    novo->anterior = NULL;
+    novo->anterior= l->inicio;
+    l->inicio = novo;
+
+    return;
+}

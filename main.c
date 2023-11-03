@@ -11,8 +11,9 @@ int main() {
     
     int num_jogadores = 0;
     int num_baralhos = 0;
-
     int retorno_empilhamento;
+    carta retorno_desempilhamento;
+
 
     printf("Jogo rouba montes\n");
 
@@ -35,6 +36,7 @@ int main() {
     }
 
 
+    printf("Tudo pronto, vamos ao jogo!\n");
 
     // preenche o baralho com os numeros e os nipes , usando o controlador numero de baralhos para repetir
     // processo a qauntidade de vezes nescessarias
@@ -46,6 +48,14 @@ int main() {
             }
         }
 }
+
+    embaralharPilha(&baralho_principal);//baralho embaralhado
+
+    printf("As cartas comunitarias da mesa sao:\n");
+    for(int i = 0; i < 4; i++){//desempilhamento do baralho e atribuição as cartas comunitarias da mesa
+        retorno_desempilhamento = desempilhar_baralho(&baralho_principal);
+        insere_lista(cartas_mesa, retorno_desempilhamento);
+    }
 
     return 0;
 }
