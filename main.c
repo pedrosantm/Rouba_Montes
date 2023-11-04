@@ -51,11 +51,21 @@ int main() {
 
     embaralharPilha(&baralho_principal);//baralho embaralhado
 
-    printf("As cartas comunitarias da mesa sao:\n");
+    printf("\nAs cartas comunitarias da mesa sao:\n");
     for(int i = 0; i < 4; i++){//desempilhamento do baralho e atribuição as cartas comunitarias da mesa
         retorno_desempilhamento = desempilhar_baralho(&baralho_principal);
         insere_lista(cartas_mesa, retorno_desempilhamento);
     }
 
+    print_lista(cartas_mesa);
+
+    for(int i = 0; i<num_jogadores; i++){
+        printf("As cartas do jogador %d sao: \n", i+1);
+        for(int i = 0; i<4; i++){
+             retorno_desempilhamento = desempilhar_baralho(&baralho_principal);
+             insere_lista(jogadores[i].cartas_jogaveis, retorno_desempilhamento);           
+        }
+        print_lista(jogadores[i].cartas_jogaveis);
+    }
     return 0;
 }

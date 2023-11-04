@@ -79,8 +79,35 @@ void insere_lista(lista* l, carta c){
     elemento* novo = (elemento*)malloc(sizeof(elemento));
     novo->carta = c;    
     novo->anterior = NULL;
-    novo->anterior= l->inicio;
-    l->inicio = novo;
+    if(l->inicio == NULL) 
+        l->inicio = novo;
+    else{
+        elemento* aux = l->inicio;
+        while (aux->anterior != NULL) {
+            aux = aux->anterior;
+    }
+    aux->anterior = novo;
+   }
+   return;
+}
 
+void insere_monte_jogador(jogador* j, carta c){
+    elemento* novo = (elemento*)malloc(sizeof(elemento));//ponteiro para novo elemento
+    if(novo!=NULL){
+        novo->carta = c;//a parte carta do novo elemento recebendo o valor passado por paramentro na função
+        novo->anterior = j->monte.topo;//parte anterior do novo elemento recebe o antigo topo do monte
+        j->monte.topo= novo;//o topo é atualizado recebendo o novo elemento
+    }
     return;
 }
+
+
+void print_lista(lista* cartas_mesa){
+    elemento* aux = cartas_mesa->inicio;
+     while(aux != NULL){
+            printf("|| %d   %c ||  ", aux->carta.numero, aux->carta.nipe);
+            aux = aux->anterior;
+    }
+    return;
+}
+
