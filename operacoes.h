@@ -37,13 +37,44 @@ typedef struct jogador{
 
 
 ///////////////////////////////
+//inicialização
 
 
-void inicializarPilha(pilha *baralho) {
-    baralho->topo = -1;
-    return; // Inicializa a pilha vazia
+int cria_monte(pilha_dinamica* p){//cria o monte dos jogadores
+    p->topo=0;
+    if(p->topo==0)
+        return 1;
+    else
+        return 0;
 }
 
+int cria_baralho(pilha *p){//cria o monte para o baralho
+    p->topo=0;
+    if(p->topo==0){
+        return 1;
+    }else
+        return 0;
+}
+
+int inicializa_lista(lista* l){
+    l->inicio = NULL;
+    if(l->inicio==NULL)
+        return 1;
+    else 
+        return 0;
+}
+
+int inicializacao_num_de_cartas(jogador* j){
+    j->numero_de_cartas == 0;
+    if(j->numero_de_cartas == 0)
+        return 1;
+    else
+        return 0;
+}
+
+
+////////////////////////////////
+///manipulações nas listas e pilhas
 
 
 void embaralharPilha(pilha *baralho) {
@@ -61,8 +92,8 @@ void embaralharPilha(pilha *baralho) {
 }
 
 
-void empilhar_baralho(pilha *baralho, carta carta) {
-    if (baralho->topo < 52 - 1) {
+void empilhar_baralho(pilha *baralho, carta carta, int num_baralhos) {
+    if (baralho->topo < num_baralhos - 1) {
         baralho->cartas[baralho->topo] = carta;
         baralho->topo++;
     }
@@ -97,9 +128,16 @@ void insere_monte_jogador(jogador* j, carta c){
         novo->carta = c;//a parte carta do novo elemento recebendo o valor passado por paramentro na função
         novo->anterior = j->monte.topo;//parte anterior do novo elemento recebe o antigo topo do monte
         j->monte.topo= novo;//o topo é atualizado recebendo o novo elemento
+        j->numero_de_cartas ++;
     }
     return;
 }
+
+
+
+////////////////////////////////////
+//print
+
 
 
 void print_lista(lista* cartas_mesa){
@@ -111,3 +149,9 @@ void print_lista(lista* cartas_mesa){
     return;
 }
 
+void print_montes(jogador* j, int i){
+    elemento *aux = j->monte.topo;
+    printf("Monte do jogador %d: || %d %c ||\n", i, aux->carta.numero, aux->carta.nipe);
+    printf("Numero de carts: %d\n", j->numero_de_cartas);
+    return;
+}
