@@ -83,29 +83,35 @@ int main() {
             for(int i = 0; i<num_jogadores; i++){
 
                 printf("\nAs cartas comunitarias da mesa sao:\n");
-                for(int k = 0; k < 4; k++){//desempilhamento do baralho e atribuição as cartas comunitarias da mesa
+                for(int j = 0; j < 4; j++){//desempilhamento do baralho e atribuição as cartas comunitarias da mesa
                     retorno_desempilhamento = desempilhar_baralho(&baralho_principal);
                     insere_lista(cartas_mesa, retorno_desempilhamento);
-                }
-
-                print_lista(cartas_mesa);
-
-                    //distribuição das cartas jogaveis aos jogadores
-                    printf("\nAs cartas do jogador %d sao: \n", i+1);
-                    for(int k = 0; k<4; k++){
-                        carta retorno_desempilhamento = desempilhar_baralho(&baralho_principal);
-                        insere_lista(&jogadores[k].cartas_jogaveis, retorno_desempilhamento);           
-                    }
-                    print_lista(&jogadores[i].cartas_jogaveis);
-
-                    for(int l = 0; l<num_jogadores; l++){
-                        if(l != i){
-                            print_montes(&jogadores[l], l);
-                        }
-                        
+                    carta retorno_desempilhamento = desempilhar_baralho(&baralho_principal);
+                    insere_lista(&jogadores[j].cartas_jogaveis, retorno_desempilhamento);//distribuição das cartas jogaveis aos jogadores    
                     }
                 
+
+
+                
+
+                        print_lista(cartas_mesa);
+
+                            
+                        printf("\nAs cartas do jogador %d sao: \n", i+1);
+                        print_lista(&jogadores[i].cartas_jogaveis);
+
+                        for(int l = 0; l<num_jogadores; l++){
+                            if(l != i){
+                                print_montes(&jogadores[l], l);
+                            }
+                            
+                        }
+                        ///escolha do jogador em sua jogada///
+
+
+                
+                        
         }
-  }
+    }
     return 0;
 }
