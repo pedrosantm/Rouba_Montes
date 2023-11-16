@@ -60,7 +60,7 @@ int main() {
                  empilhar_baralho(&baralho_principal, carta, num_baralhos);//empilha as cartas no baralho principal
             }
         }
-}
+ }
 
     embaralharPilha(&baralho_principal);//baralho embaralhado
 
@@ -108,9 +108,19 @@ int main() {
                         }
                         ///escolha do jogador em sua jogada///
 
+                        int op = 0;
+                        printf("Qual sera a jogada?\n1-Escollher carta da mesa\n2-Roubar Monte de outro jogador\n");    
+                        scanf("%d", &op);
 
-                
-                        
+
+                        switch(op){
+                            case 1:
+                            case 2:
+                            default:
+                                printf("\nJogada invalida\n");
+                                break;
+                        }
+                       
         }
     }
     return 0;

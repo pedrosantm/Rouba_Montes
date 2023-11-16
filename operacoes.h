@@ -135,6 +135,8 @@ void insere_monte_jogador(jogador* j, carta c){
 
 
 
+
+
 ////////////////////////////////////
 //print
 
@@ -155,3 +157,4 @@ void print_montes(jogador* j, int i){
     printf("Numero de carts: %d\n", j->numero_de_cartas);
     return;
 }
+
