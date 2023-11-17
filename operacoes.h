@@ -40,7 +40,7 @@ typedef struct jogador{
 //inicialização
 
 
-int cria_monte(pilha_dinamica* p){//cria o monte dos jogadores
+int inicializa_monte(pilha_dinamica* p){//cria o monte dos jogadores
     p->topo=0;
     if(p->topo==0)
         return 1;
@@ -48,7 +48,7 @@ int cria_monte(pilha_dinamica* p){//cria o monte dos jogadores
         return 0;
 }
 
-int cria_baralho(pilha *p){//cria o monte para o baralho
+int inicializa_baralho(pilha *p){//cria o monte para o baralho
     p->topo=0;
     if(p->topo==0){
         return 1;
@@ -92,11 +92,9 @@ void embaralharPilha(pilha *baralho) {
 }
 
 
-void empilhar_baralho(pilha *baralho, carta carta, int num_baralhos) {
-    if (baralho->topo < num_baralhos - 1) {
+void empilhar_baralho(pilha *baralho, carta carta) {
         baralho->cartas[baralho->topo] = carta;
         baralho->topo++;
-    }
     return ;
 }
 
@@ -142,11 +140,13 @@ void insere_monte_jogador(jogador* j, carta c){
 
 
 
-void print_lista(lista* cartas_mesa){
-    elemento* aux = cartas_mesa->inicio;
+void print_lista(lista* cartas){
+    elemento* aux = cartas->inicio;
+    int i = 1;
      while(aux != NULL){
-            printf("|| %d   %c ||  ", aux->carta.numero, aux->carta.nipe);
+            printf("%d-|| %d   %c ||  ", i, aux->carta.numero, aux->carta.nipe);
             aux = aux->anterior;
+            i++;
     }
     return;
 }

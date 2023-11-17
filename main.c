@@ -36,6 +36,7 @@ int main() {
         jogadores[i].numero_de_cartas = 0; //número de cartas de cada jogador
     }
 
+
     for (int i = 0; i < num_jogadores; i++) {//inicialização dos montes e cartas jogaveis 
         
         int retorno_cria_monte = cria_monte(&jogadores[i].monte);
@@ -51,18 +52,27 @@ int main() {
 
 
     
-    // preenche o baralho com os numeros e os nipes , usando o controlador numero de baralhos para repetir
+     // preenche o baralho com os numeros e os nipes , usando o controlador numero de baralhos para repetir
     // processo a qauntidade de vezes nescessarias
+    char nipe[4] = {'P', 'C', 'E', 'O'};
+    int retorno_inicializa_baralho = inicializa_baralho(&baralho_principal);
+    if(retorno_inicializa_baralho==0){
+        printf("Erro inicializacao de baralho");
+        return 0;
+    }else{
     for(int i = 0; i < num_baralhos; i++) {
         for (int numero = 1; numero <= 13; numero++) {
-            for (char nipe = 'P'; nipe <= 'E'; nipe++) {
-                carta carta = {numero, nipe};
-                 empilhar_baralho(&baralho_principal, carta, num_baralhos);//empilha as cartas no baralho principal
+            for (int j = 0; j<4; j++) {
+                carta c;
+                c.numero = numero;
+                c.nipe = nipe[j];
+                empilhar_baralho(&baralho_principal, c);//empilha as cartas no baralho principal
             }
         }
+   }
  }
 
-    embaralharPilha(&baralho_principal);//baralho embaralhado
+    //embaralharPilha(&baralho_principal);//baralho embaralhado
 
     printf("Tudo pronto, vamos ao jogo!\n");
 
@@ -71,12 +81,34 @@ int main() {
 ///////////////////////////////////////////////
 
 
+   int retorno_inicializa_cartas_comunitarias = inicializa_lista(&cartas_mesa);
+   if(retorno_inicializa_cartas_comunitarias == 0){
+    printf("Erro inicializacao lista");
+    return 0;
+   }
+
+
+   int retorno_inicializa_cartas_jogaveis;
+   int retorno_inicializa_montes; 
+   int retorno_num_de_cartas;
+   for(int i = 0; i<num_jogadores; i++){
+    retorno_inicializa_cartas_jogaveis = inicializa_lista(&jogadores[i].cartas_jogaveis);
+    retorno_inicializa_montes = inicializa_monte(&jogadores->monte);
+    retorno_num_de_cartas = inicializacao_num_de_cartas(&jogadores[i].numero_de_cartas);
+   }
+    if(retorno_inicializa_cartas_comunitarias == 0 || retorno_inicializa_montes == 0 || retorno_num_de_cartas == 0 ){
+        printf("Erro mde inicialização nas estruturas");
+    }
+   
+
+
+
     while(baralho_principal.topo - 1 > 0){
 
         if(baralho_principal.topo - 1 == 4)
             printf("Ultima rodada\n");
         else
-            printf("Numero de cartas no baralho: %d\n", baralho_principal.topo - 1);
+            printf("Numero de cartas no baralho: %d\n", baralho_principal.topo);
 
 
 
@@ -88,7 +120,7 @@ int main() {
                     insere_lista(cartas_mesa, retorno_desempilhamento);
                     carta retorno_desempilhamento = desempilhar_baralho(&baralho_principal);
                     insere_lista(&jogadores[j].cartas_jogaveis, retorno_desempilhamento);//distribuição das cartas jogaveis aos jogadores    
-                    }
+                }
                 
 
 
@@ -116,12 +148,15 @@ int main() {
                         switch(op){
                             case 1:
                             case 2:
+                            case 3:
                             default:
                                 printf("\nJogada invalida\n");
                                 break;
-                        }
+                            }
                        
-        }
+            }
     }
     return 0;
+
+
 }
