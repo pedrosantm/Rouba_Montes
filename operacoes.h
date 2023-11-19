@@ -17,6 +17,7 @@ typedef struct Pilha {
 typedef struct elemento{//estruct para definição do elemento
     carta carta;
     struct elemento* anterior;
+    struct elementto* prox;
 }elemento;
 
 typedef struct pilha_dinamica{//pilha dinamica para representar cada monte de um jogador jogador
@@ -105,7 +106,7 @@ carta desempilhar_baralho(pilha *baralho){
     return baralho->cartas[baralho->topo];
 }
 
-void insere_lista(lista* l, carta c){
+int insere_lista(lista* l, carta c){
     elemento* novo = (elemento*)malloc(sizeof(elemento));
     novo->carta = c;    
     novo->anterior = NULL;
@@ -118,8 +119,10 @@ void insere_lista(lista* l, carta c){
     }
     aux->anterior = novo;
    }
-   return;
+
+    return 1;
 }
+
 
 void insere_monte_jogador(jogador* j, carta c){
     elemento* novo = (elemento*)malloc(sizeof(elemento));//ponteiro para novo elemento
@@ -130,6 +133,39 @@ void insere_monte_jogador(jogador* j, carta c){
         j->numero_de_cartas++;
     }
     return;
+}
+
+
+carta pesquisa_indice(lista*l, int index){//função para retornar carna no indice indicado
+    elemento* aux = l->inicio;
+    int i = 0;
+    while( i < index){
+        aux = aux->anterior;
+        i++; 
+    }
+     return aux->carta;
+}
+
+int verificacao(carta* c1, carta* c2){
+    if(c1->numero == c2->numero)
+        return 1;
+    else 
+        return 0;
+}
+
+void retirar_indice(lista* l, int index){
+    elemento* aux_atual = l->inicio;
+    elemento* aux_anterior = NULL;
+    int i = 0;
+    while(i <index){
+            aux_anterior = aux_atual;
+            aux_atual = aux_atual->prox;
+            i++;
+        }
+
+        aux_anterior->prox = NULL;
+        free(aux_atual);
+        return;
 }
 
 
@@ -146,7 +182,7 @@ void print_lista(lista* cartas){
     int i = 1;
     printf("As cartas da mesa sao:\n");
      while(aux != NULL){
-            printf("%d - || %d   %c ||  ",i , aux->carta.numero, aux->carta.nipe);
+            printf("%d - || %d   %c ||       ",i , aux->carta.numero, aux->carta.nipe);
             aux = aux->anterior;
             i++;
     }
@@ -157,10 +193,10 @@ void print_lista(lista* cartas){
 void print_montes(jogador* j){
     elemento* aux = j->monte.topo;
     if(j->numero_de_cartas == 0){
-        printf("Monte do jogador %s: Nao possui cartas\n", j->nome);
+        printf("Monte do jogador %sNao possui cartas\n", j->nome);
         return;
       }else{
-        printf("Monte do jogador %s: || %d %c ||\n", j->nome, aux->carta.numero, aux->carta.nipe);
+        printf("Monte do jogador %s|| %d %c ||\n", j->nome, aux->carta.numero, aux->carta.nipe);
         printf("Numero de cartas: %d\n", j->numero_de_cartas);
         return;
     }

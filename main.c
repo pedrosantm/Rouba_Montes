@@ -11,6 +11,10 @@ int main() {
     
     int num_jogadores = 0;
     int num_baralhos = 0;
+    int retorno_insere_lista;
+    carta carta_pesquisa;
+    int carta_jogada;
+    int retorno_verificacao;
     carta retorno_desempilhamento;
 
 
@@ -113,11 +117,14 @@ int main() {
 
         for(int i=0; i<num_jogadores; i++){
 
-
+            
             printf("\nJogada jogador %sAperte qualquere tecla para iniciar ", jogadores[i].nome);
+            int c;
+            while ((c = getchar()) != '\n' && c != EOF); // Limpa o buffer de entrada
             getchar();
 
             carta_mao = desempilhar_baralho(&baralho_principal);
+            printf(">>Sua carta e:\n");
             printf("|| %d %c ||\n", carta_mao.numero, carta_mao.nipe);
 
             printf("\n");
@@ -129,20 +136,44 @@ int main() {
                     print_montes(&jogadores[k]);
             }
 
+            int op;
+            printf("\nQual jogada sera feita?\n1-Descarte\n2-Usar carta da mesa\n3-Roubar Monte\n");
+            scanf("%d", &op);
+
+            switch (op){
+            
+            case 1:
+                retorno_insere_lista = insere_lista(&cartas_mesa, carta_mao);
+                if(retorno_insere_lista == 1)
+                    printf("Jogada realizada!\n");
+                else
+                    printf("ERRO\n");
+    
+                break;
+
+
+
+            case 2:
+                printf("Qual o indice da carta que sera usada?\n");
+                scanf("%d", &carta_jogada);
+                carta_pesquisa = pesquisa_indice(&cartas_mesa, carta_jogada-1);
+                retorno_verificacao = verificacao(&carta_mao, &carta_pesquisa);
+                if(retorno_verificacao == 1){
+                    printf("\njogada valida\n");
+                    insere_monte_jogador(&jogadores[i], carta_mao);
+                    insere_monte_jogador(&jogadores[i], carta_pesquisa);
+                    ///retirar_indice(&cartas_mesa, carta_jogada-1);
+                    printf("Voce tem direito a uma nova jogada.\n");
+                    i--;
+                }else
+                    printf("\nJogada invalida\n");
+
+                break;
+            }
+
         }
-
-
-
-
     }
-
-
-   }
-
-
-
-
-
+ }
 
    return 0;
 }
