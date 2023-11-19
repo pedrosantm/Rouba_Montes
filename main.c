@@ -11,7 +11,6 @@ int main() {
     
     int num_jogadores = 0;
     int num_baralhos = 0;
-    //int retorno_empilhamento;
     carta retorno_desempilhamento;
 
 
@@ -28,6 +27,10 @@ int main() {
     jogador *jogadores = (jogador *)malloc(num_jogadores * sizeof(jogador));//cria um array dinamico com o numero de jogadores selecionado
     lista *cartas_mesa = (lista *)malloc(sizeof(lista));
 
+
+
+
+
     // nome dos jogadores
     for (int i = 0; i < num_jogadores; i++) {
         printf("Digite o nome do Jogador %d: ", i + 1);
@@ -37,24 +40,23 @@ int main() {
     }
 
 
+
+
+
     for (int i = 0; i < num_jogadores; i++) {//inicialização dos montes e cartas jogaveis 
         
-        int retorno_cria_monte = cria_monte(&jogadores[i].monte);
-        int retorno_num_de_cartas = inicializacao_num_de_cartas(&jogadores[i]);
-         if(retorno_cria_monte == 0 && retorno_num_de_cartas == 0)
-            printf("Erro na inicializacao\n");
-         else{
-            int retorno_cria_lista = inicializa_lista(&jogadores[i].cartas_jogaveis);
-            if(retorno_cria_lista == 0)
-                printf("Erro na inicializacao\n");
-         }
+        int retorno_cria_monte = inicializa_monte(&jogadores[i].monte);
+        int retorno_num_de_cartas = inicializa_num_de_cartas(&jogadores[i]);
     }
 
 
     
+
+
+
      // preenche o baralho com os numeros e os nipes , usando o controlador numero de baralhos para repetir
     // processo a qauntidade de vezes nescessarias
-    char nipe[4] = {'P', 'C', 'E', 'O'};
+    char np[4] = {'P', 'C', 'E', 'O'};
     int retorno_inicializa_baralho = inicializa_baralho(&baralho_principal);
     if(retorno_inicializa_baralho==0){
         printf("Erro inicializacao de baralho");
@@ -65,14 +67,20 @@ int main() {
             for (int j = 0; j<4; j++) {
                 carta c;
                 c.numero = numero;
-                c.nipe = nipe[j];
+                c.nipe = np[j];
                 empilhar_baralho(&baralho_principal, c);//empilha as cartas no baralho principal
             }
         }
    }
  }
 
-    //embaralharPilha(&baralho_principal);//baralho embaralhado
+
+
+
+
+
+
+    embaralharPilha(&baralho_principal);//baralho embaralhado
 
     printf("Tudo pronto, vamos ao jogo!\n");
 
@@ -82,81 +90,62 @@ int main() {
 
 
    int retorno_inicializa_cartas_comunitarias = inicializa_lista(&cartas_mesa);
-   if(retorno_inicializa_cartas_comunitarias == 0){
+   if(retorno_inicializa_cartas_comunitarias == 0)
     printf("Erro inicializacao lista");
-    return 0;
-   }
-
-
-   int retorno_inicializa_cartas_jogaveis;
-   int retorno_inicializa_montes; 
-   int retorno_num_de_cartas;
-   for(int i = 0; i<num_jogadores; i++){
-    retorno_inicializa_cartas_jogaveis = inicializa_lista(&jogadores[i].cartas_jogaveis);
-    retorno_inicializa_montes = inicializa_monte(&jogadores->monte);
-    retorno_num_de_cartas = inicializacao_num_de_cartas(&jogadores[i].numero_de_cartas);
-   }
-    if(retorno_inicializa_cartas_comunitarias == 0 || retorno_inicializa_montes == 0 || retorno_num_de_cartas == 0 ){
-        printf("Erro mde inicialização nas estruturas");
-    }
-   
+   else{
+    carta carta_desempilhada = desempilhar_baralho(&baralho_principal);
+    insere_lista(&cartas_mesa, carta_desempilhada);
+    print_lista(&cartas_mesa);
 
 
 
-    while(baralho_principal.topo - 1 > 0){
-
-        if(baralho_principal.topo - 1 == 4)
-            printf("Ultima rodada\n");
-        else
-            printf("Numero de cartas no baralho: %d\n", baralho_principal.topo);
+    carta carta_mao;
+    char enter;
+    while(baralho_principal.topo > 0) {
 
 
 
-            for(int i = 0; i<num_jogadores; i++){
-
-                printf("\nAs cartas comunitarias da mesa sao:\n");
-                for(int j = 0; j < 4; j++){//desempilhamento do baralho e atribuição as cartas comunitarias da mesa
-                    retorno_desempilhamento = desempilhar_baralho(&baralho_principal);
-                    insere_lista(cartas_mesa, retorno_desempilhamento);
-                    carta retorno_desempilhamento = desempilhar_baralho(&baralho_principal);
-                    insere_lista(&jogadores[j].cartas_jogaveis, retorno_desempilhamento);//distribuição das cartas jogaveis aos jogadores    
-                }
-                
+        if(baralho_principal.topo == 1)
+                printf("\nUltima rodada\n");
+            else
+                printf("\nCartas no baralho: %d\n", baralho_principal.topo);
 
 
-                
-
-                        print_lista(cartas_mesa);
-
-                            
-                        printf("\nAs cartas do jogador %d sao: \n", i+1);
-                        print_lista(&jogadores[i].cartas_jogaveis);
-
-                        for(int l = 0; l<num_jogadores; l++){
-                            if(l != i){
-                                print_montes(&jogadores[l], l);
-                            }
-                            
-                        }
-                        ///escolha do jogador em sua jogada///
-
-                        int op = 0;
-                        printf("Qual sera a jogada?\n1-Escollher carta da mesa\n2-Roubar Monte de outro jogador\n");    
-                        scanf("%d", &op);
+        for(int i=0; i<num_jogadores; i++){
 
 
-                        switch(op){
-                            case 1:
-                            case 2:
-                            case 3:
-                            default:
-                                printf("\nJogada invalida\n");
-                                break;
-                            }
-                       
+            printf("\nJogada jogador %sAperte qualquere tecla para iniciar ", jogadores[i].nome);
+            getchar();
+
+            carta_mao = desempilhar_baralho(&baralho_principal);
+            printf("|| %d %c ||\n", carta_mao.numero, carta_mao.nipe);
+
+            printf("\n");
+            print_lista(&cartas_mesa);
+
+            printf("\n\n");
+            for(int k=0; k<num_jogadores; k++){
+                if(k!=i)
+                    print_montes(&jogadores[k]);
             }
+
+        }
+
+
+
+
     }
-    return 0;
 
 
+   }
+
+
+
+
+
+
+   return 0;
 }
+
+
+   
