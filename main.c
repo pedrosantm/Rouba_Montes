@@ -135,6 +135,15 @@ int main() {
             printf(">>Sua carta e:\n");
             printf("|| %d %c ||\n", carta_mao.numero, carta_mao.nipe);
 
+
+
+            if(cartas_mesa->num_de_cartas == 0){
+                carta carta_desempilhada = desempilhar_baralho(&baralho_principal);
+                insere_lista(&cartas_mesa, carta_desempilhada);
+            }
+
+
+
             printf("\n");
             print_lista(&cartas_mesa);
 
@@ -165,22 +174,18 @@ int main() {
                 aux_carta = carta_jogada;
                 carta_pesquisa = pesquisa_indice(&cartas_mesa, carta_jogada-1);
                 printf("Ate aqui");
-                if(carta_pesquisa.numero == -1){
-                    printf("Jogada invalidaaaa");
-                    break;
-                }else{
-                    retorno_verificacao = verificacao(&carta_mao, &carta_pesquisa);
-                    if(retorno_verificacao == 1){
-                        printf("\njogada valida\n");
-                        insere_monte_jogador(&jogadores[i], carta_mao);
-                        insere_monte_jogador(&jogadores[i], carta_pesquisa);
-                        //retirar_carta(&cartas_mesa, aux_carta);
-                        printf("Voce tem direito a uma nova jogada\n");
-                        i--;
-                    }else
-                        printf("\nJogada invalida\n");
+                retorno_verificacao = verificacao(&carta_mao, &carta_pesquisa);
+                if(retorno_verificacao == 1){
+                    printf("\njogada valida\n");
+                    insere_monte_jogador(&jogadores[i], carta_mao);
+                    insere_monte_jogador(&jogadores[i], carta_pesquisa);
+                    //retirar_carta(&cartas_mesa, aux_carta);
+                    printf("Voce tem direito a uma nova jogada\n");
+                    i--;
+                }else
+                    printf("\nJogada invalida\n");
 
-                    break;
+                break;
                 }
             }
 
