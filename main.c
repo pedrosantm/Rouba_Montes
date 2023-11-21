@@ -15,8 +15,10 @@ int main() {
     carta carta_pesquisa;
     int carta_jogada;
     int retorno_verificacao;
+    int aux_carta;
     carta retorno_desempilhamento;
-
+    carta_pesquisa.nipe = '0';
+    carta_pesquisa.numero = 0;
 
     printf("Jogo rouba montes\n");
 
@@ -75,6 +77,12 @@ int main() {
                 empilhar_baralho(&baralho_principal, c);//empilha as cartas no baralho principal
             }
         }
+        for(int k=0; k<2; k++){
+            carta c;
+            c.numero = 0;
+            c.nipe = 'J';
+            empilhar_baralho(&baralho_principal, c);//ampilhamento das cartas coringas
+        }
    }
  }
 
@@ -104,7 +112,7 @@ int main() {
 
 
     carta carta_mao;
-    char enter;
+
     while(baralho_principal.topo > 0) {
 
 
@@ -151,24 +159,29 @@ int main() {
     
                 break;
 
-
-
             case 2:
                 printf("Qual o indice da carta que sera usada?\n");
                 scanf("%d", &carta_jogada);
+                aux_carta = carta_jogada;
                 carta_pesquisa = pesquisa_indice(&cartas_mesa, carta_jogada-1);
-                retorno_verificacao = verificacao(&carta_mao, &carta_pesquisa);
-                if(retorno_verificacao == 1){
-                    printf("\njogada valida\n");
-                    insere_monte_jogador(&jogadores[i], carta_mao);
-                    insere_monte_jogador(&jogadores[i], carta_pesquisa);
-                    ///retirar_indice(&cartas_mesa, carta_jogada-1);
-                    printf("Voce tem direito a uma nova jogada.\n");
-                    i--;
-                }else
-                    printf("\nJogada invalida\n");
+                printf("Ate aqui");
+                if(carta_pesquisa.numero == -1){
+                    printf("Jogada invalidaaaa");
+                    break;
+                }else{
+                    retorno_verificacao = verificacao(&carta_mao, &carta_pesquisa);
+                    if(retorno_verificacao == 1){
+                        printf("\njogada valida\n");
+                        insere_monte_jogador(&jogadores[i], carta_mao);
+                        insere_monte_jogador(&jogadores[i], carta_pesquisa);
+                        //retirar_carta(&cartas_mesa, aux_carta);
+                        printf("Voce tem direito a uma nova jogada\n");
+                        i--;
+                    }else
+                        printf("\nJogada invalida\n");
 
-                break;
+                    break;
+                }
             }
 
         }
