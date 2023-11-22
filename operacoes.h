@@ -146,7 +146,7 @@ int verificacao(carta* c1, carta* c2){
 }
 
 
-carta pesquisa_indice(lista*l, int index){//função para retornar carna no indice indicado
+int pesquisa_indice(lista*l, int index, carta* carta_mao){//função para retornar carna no indice indicado
     elemento* aux = l->inicio;
     int i = 0;
     printf("Teste");
@@ -156,12 +156,15 @@ carta pesquisa_indice(lista*l, int index){//função para retornar carna no indi
     }
     if(aux!= NULL){
     printf("Teste2");
-    return aux->carta;
+    if(aux->carta.numero == carta_mao->numero)
+        return 1;
+    else
+        return 0;
 }
 }
 
 
-void retirar_carta(lista* l, int index) {
+void retirar_carta_lista(lista* l, int index) {
     printf("Teste");
     if (index < 0 || l->num_de_cartas <= 0) {
         printf("Indice invalido ou lista vazia\n");
@@ -206,6 +209,40 @@ void retirar_carta(lista* l, int index) {
 
 
 
+carta retirar_carta_monte(jogador* j) {
+
+    elemento* carta_retirada = j->monte.topo;
+    carta c = carta_retirada->carta;
+    j->monte.topo = carta_retirada->anterior;
+    free(carta_retirada);
+    j->numero_de_cartas--;
+    return c;
+}
+
+
+
+void roubar_monte(jogador* jogador_atual, jogador* jogador_alvo) {
+    elemento* carta_transferida = jogador_alvo->monte.topo;
+    
+    if (carta_transferida == NULL) 
+        return;
+    
+
+    while (carta_transferida != NULL) {
+        carta c = carta_transferida->carta;
+        insere_monte_jogador(jogador_atual, c); // Insere a carta no monte do jogador atual
+        if(jogador_alvo->monte.topo == NULL)
+            return;
+        retirar_carta(&jogador_alvo->monte); // Remove a carta do monte do jogador alvo
+        carta_transferida = jogador_alvo->monte.topo;
+    }
+
+    return;
+}
+
+
+
+
 
 
 
@@ -228,13 +265,13 @@ void print_lista(lista* cartas){
 }
 
 
-void print_montes(jogador* j){
+void print_montes(jogador* j, int k){
     elemento* aux = j->monte.topo;
     if(j->numero_de_cartas == 0){
-        printf("Monte do jogador %sNao possui cartas\n", j->nome);
+        printf("%d - Monte do jogador %sNao possui cartas\n", k , j->nome);
         return;
       }else{
-        printf("Monte do jogador %s|| %d %c ||\n", j->nome, aux->carta.numero, aux->carta.nipe);
+        printf("%d - Monte do jogador %s|| %d %c ||\n", k , j->nome, aux->carta.numero, aux->carta.nipe);
         printf("Numero de cartas: %d\n", j->numero_de_cartas);
         return;
     }

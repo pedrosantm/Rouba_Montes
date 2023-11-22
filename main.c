@@ -16,6 +16,7 @@ int main() {
     int carta_jogada;
     int retorno_verificacao;
     int aux_carta;
+    int jogador_monte_roubado = 0;
     carta retorno_desempilhamento;
     carta_pesquisa.nipe = '0';
     carta_pesquisa.numero = 0;
@@ -150,7 +151,7 @@ int main() {
             printf("\n\n");
             for(int k=0; k<num_jogadores; k++){
                 if(k!=i)
-                    print_montes(&jogadores[k]);
+                    print_montes(&jogadores[k], k);
             }
 
             int op;
@@ -172,26 +173,46 @@ int main() {
                 printf("Qual o indice da carta que sera usada?\n");
                 scanf("%d", &carta_jogada);
                 aux_carta = carta_jogada;
-                carta_pesquisa = pesquisa_indice(&cartas_mesa, carta_jogada-1);
+                retorno_verificacao = pesquisa_indice(&cartas_mesa, carta_jogada-1, &carta_mao);
                 printf("Ate aqui");
-                retorno_verificacao = verificacao(&carta_mao, &carta_pesquisa);
+                //retorno_verificacao = verificacao(&carta_mao, &carta_pesquisa);
                 if(retorno_verificacao == 1){
                     printf("\njogada valida\n");
                     insere_monte_jogador(&jogadores[i], carta_mao);
                     insere_monte_jogador(&jogadores[i], carta_pesquisa);
-                    //retirar_carta(&cartas_mesa, aux_carta);
+                    retirar_carta_lista(&cartas_mesa, aux_carta);
                     printf("Voce tem direito a uma nova jogada\n");
                     i--;
                 }else
                     printf("\nJogada invalida\n");
 
                 break;
-                }
+
+            case 3:
+                printf("De qual jogador ira roubar o monte?\n");
+                scanf("%d", &jogador_monte_roubado);
+                for(int k=0; k<num_jogadores; k++){
+                    if(k!=i)
+                        if(k == jogador_monte_roubado){
+                        retorno_verificacao = verificacao(&carta_mao, &jogadores[k].monte.topo);
+                        if(retorno_verificacao == 1){
+                            roubar_monte(&jogadores[i], &jogadores[k]);
+                            insere_monte_jogador(&jogadores[i], carta_mao);
+                        }else
+                            printf("Jogada invalida\n");
+                            printf("Cartas transferidas com sucesso para o monte do jogador atual.\n");
+                        break;
+                        }
+                 }
+
             }
 
+           
+
         }
+      }
     }
- }
+ 
 
    return 0;
 }
