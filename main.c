@@ -173,9 +173,9 @@ int main() {
                 printf("Qual o indice da carta que sera usada?\n");
                 scanf("%d", &carta_jogada);
                 aux_carta = carta_jogada;
-                retorno_verificacao = pesquisa_indice(&cartas_mesa, carta_jogada-1, &carta_mao);
+                carta_pesquisa = pesquisa_indice(&cartas_mesa, carta_jogada-1);
                 printf("Ate aqui");
-                //retorno_verificacao = verificacao(&carta_mao, &carta_pesquisa);
+                retorno_verificacao = verificacao(&carta_mao, &carta_pesquisa);
                 if(retorno_verificacao == 1){
                     printf("\njogada valida\n");
                     insere_monte_jogador(&jogadores[i], carta_mao);
@@ -198,7 +198,7 @@ int main() {
                         if(retorno_verificacao == 1){
                             roubar_monte(&jogadores[i], &jogadores[k]);
                             insere_monte_jogador(&jogadores[i], carta_mao);
-                        }else
+                        }else{
                             printf("Jogada invalida\n");
                             printf("Cartas transferidas com sucesso para o monte do jogador atual.\n");
                         break;
@@ -212,10 +212,8 @@ int main() {
         }
       }
     }
- 
-
+  }
    return 0;
 }
-
 
    

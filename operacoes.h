@@ -146,21 +146,16 @@ int verificacao(carta* c1, carta* c2){
 }
 
 
-int pesquisa_indice(lista*l, int index, carta* carta_mao){//função para retornar carna no indice indicado
+carta pesquisa_indice(lista*l, int index){//função para retornar carna no indice indicado
     elemento* aux = l->inicio;
     int i = 0;
-    printf("Teste");
     while( i < index && aux != NULL){
         aux = aux->prox;
         i++; 
     }
     if(aux!= NULL){
-    printf("Teste2");
-    if(aux->carta.numero == carta_mao->numero)
-        return 1;
-    else
-        return 0;
-}
+    return aux->carta;
+    }
 }
 
 
@@ -209,7 +204,7 @@ void retirar_carta_lista(lista* l, int index) {
 
 
 
-carta retirar_carta_monte(jogador* j) {
+void retirar_carta_monte(jogador* j) {
 
     elemento* carta_retirada = j->monte.topo;
     carta c = carta_retirada->carta;
@@ -233,7 +228,7 @@ void roubar_monte(jogador* jogador_atual, jogador* jogador_alvo) {
         insere_monte_jogador(jogador_atual, c); // Insere a carta no monte do jogador atual
         if(jogador_alvo->monte.topo == NULL)
             return;
-        retirar_carta(&jogador_alvo->monte); // Remove a carta do monte do jogador alvo
+        retirar_carta_monte(&jogador_alvo); // Remove a carta do monte do jogador alvo
         carta_transferida = jogador_alvo->monte.topo;
     }
 
