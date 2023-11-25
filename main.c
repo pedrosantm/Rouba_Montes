@@ -63,6 +63,8 @@ int main() {
 
      // preenche o baralho com os numeros e os nipes , usando o controlador numero de baralhos para repetir
     // processo a qauntidade de vezes nescessarias
+
+
     char np[4] = {'P', 'C', 'E', 'O'};
     int retorno_inicializa_baralho = inicializa_baralho(&baralho_principal);
     if(retorno_inicializa_baralho==0){
@@ -172,7 +174,10 @@ int main() {
             case 2:
                 printf("Qual o indice da carta que sera usada?\n");
                 scanf("%d", &carta_jogada);
+<<<<<<< Updated upstream
                 aux_carta = carta_jogada;
+=======
+>>>>>>> Stashed changes
                 carta_pesquisa = pesquisa_indice(&cartas_mesa, carta_jogada-1);
                 printf("Ate aqui");
                 retorno_verificacao = verificacao(&carta_mao, &carta_pesquisa);
@@ -180,7 +185,7 @@ int main() {
                     printf("\njogada valida\n");
                     insere_monte_jogador(&jogadores[i], carta_mao);
                     insere_monte_jogador(&jogadores[i], carta_pesquisa);
-                    retirar_carta_lista(&cartas_mesa, aux_carta);
+                    remover_lista(&cartas_mesa, carta_jogada-1);
                     printf("Voce tem direito a uma nova jogada\n");
                     i--;
                 }else

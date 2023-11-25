@@ -24,10 +24,6 @@ typedef struct pilha_dinamica{//pilha dinamica para representar cada monte de um
     elemento* topo;
 }pilha_dinamica;
 
-typedef struct{
-    elemento* inicio;
-    int num_de_cartas;
-}lista;
 
 typedef struct jogador{
     char nome[50];
@@ -35,7 +31,12 @@ typedef struct jogador{
     int numero_de_cartas;
 }jogador;
 
-
+typedef struct lista{
+    int vet[54];
+    int fim;
+    int inicio;
+    int num_de_cartas;
+}lista;
 
 ///////////////////////////////
 //inicialização
@@ -108,21 +109,9 @@ carta desempilhar_baralho(pilha *baralho){
     return baralho->cartas[baralho->topo];
 }
 
-int insere_lista(lista* l, carta c){
-    elemento* novo = (elemento*)malloc(sizeof(elemento));
-    novo->carta = c;    
-    novo->anterior = NULL;
-    if(l->inicio == NULL) 
-        l->inicio = novo;
-    else{
-        elemento* aux = l->inicio;
-        while (aux->anterior != NULL) {
-            aux = aux->anterior;
-    }
-    aux->anterior = novo;
-   }
-   l->num_de_cartas++;
-
+int inserir_lista(lista* l, int v){
+    l->vet[l->fim]=v;
+    l->fim++;
     return 1;
 }
 
@@ -146,6 +135,7 @@ int verificacao(carta* c1, carta* c2){
 }
 
 
+<<<<<<< Updated upstream
 carta pesquisa_indice(lista*l, int index){//função para retornar carna no indice indicado
     elemento* aux = l->inicio;
     int i = 0;
@@ -156,50 +146,22 @@ carta pesquisa_indice(lista*l, int index){//função para retornar carna no indi
     if(aux!= NULL){
     return aux->carta;
     }
+=======
+carta pesquisa_indice(lista* l, int index){
+    if(posicao<l->fim&&posicao<0)
+        return l->vet[posicao--];
+
+>>>>>>> Stashed changes
 }
 
 
-void retirar_carta_lista(lista* l, int index) {
-    printf("Teste");
-    if (index < 0 || l->num_de_cartas <= 0) {
-        printf("Indice invalido ou lista vazia\n");
-        return;
-    }
 
-    printf("Indice recebido: %d\n", index);
 
-    if (index == 0) {
-        elemento* aux = l->inicio;
-        l->inicio = l->inicio->prox;
-        free(aux);
-        l->num_de_cartas--;
-        printf("Elemento removido do inicio da lista\n");
-        if(l->num_de_cartas>0){
-            l->inicio = l->inicio->prox;
-        }
-        return;
-    }
-
-    elemento* aux_anterior = NULL;
-    elemento* aux_atual = l->inicio;
-    int i = 0;
-    while (i < index && aux_atual != NULL) {
-        aux_anterior = aux_atual;
-        aux_atual = aux_atual->prox;
-        i++;
-    }
-
-    if (aux_atual == NULL) {
-        printf("Indice inexistente\n");
-        return;
-    }
-
-    printf("Elemento antes da remocao: %d %c\n", aux_atual->carta.numero, aux_atual->carta.nipe);
-
-    aux_anterior->prox = aux_atual->prox;
-    free(aux_atual);
+void remover_lista(lista* l, int* v){
+    l->fim--;
+    *v=l->vet[l->fim];
     l->num_de_cartas--;
-    printf("Elemento removido do indice %d\n", index);
+    return ;
 }
 
 
