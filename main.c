@@ -1,4 +1,4 @@
-#include <stdio.H>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
@@ -15,13 +15,49 @@ int main() {
     carta carta_pesquisa;
     int carta_jogada;
     int retorno_verificacao;
-    int aux_carta;
     int jogador_monte_roubado = 0;
     carta retorno_desempilhamento;
     carta_pesquisa.nipe = '0';
     carta_pesquisa.numero = 0;
 
-    printf("Jogo rouba montes\n");
+
+    for(int i = 0; i<30; i++){
+        printf("------");
+    }
+
+    printf("\n\n");
+
+    
+    for(int i = 0; i<70; i++){
+        printf(" ");
+    }
+    printf("\033[0;33m");
+    printf("BEM VINDO AO JOGO ROUBA MONTES!!!\n");
+
+
+
+    printf("\n");
+    for(int i = 0; i<70; i++){
+        printf(" ");
+    }
+    
+
+    printf("Digite qualquer tecla para iniciar\n\n");
+    printf("\033[0;37m");
+
+
+    for(int i = 0; i<30; i++){
+        printf("------");
+    }
+    printf("\n");
+     int c;
+    while ((c = getchar()) != '\n' && c != EOF); // Limpa o buffer de entrada
+    getchar();
+
+    printf("\n\n");
+
+    
+
 
     printf("Digite o numero de jogadores: ");
     scanf("%d", &num_jogadores);
@@ -32,7 +68,7 @@ int main() {
 
     pilha baralho_principal;//o baralho prinicpal é de estrutura pilha
     jogador *jogadores = (jogador *)malloc(num_jogadores * sizeof(jogador));//cria um array dinamico com o numero de jogadores selecionado
-    lista *cartas_mesa = (lista *)malloc(sizeof(lista));
+    lista cartas_mesa;
 
 
 
@@ -63,8 +99,6 @@ int main() {
 
      // preenche o baralho com os numeros e os nipes , usando o controlador numero de baralhos para repetir
     // processo a qauntidade de vezes nescessarias
-
-
     char np[4] = {'P', 'C', 'E', 'O'};
     int retorno_inicializa_baralho = inicializa_baralho(&baralho_principal);
     if(retorno_inicializa_baralho==0){
@@ -97,7 +131,7 @@ int main() {
 
     embaralharPilha(&baralho_principal);//baralho embaralhado
 
-    printf("Tudo pronto, vamos ao jogo!\n");
+    printf("Tudo pronto, vamos ao jogo!\n\n");
 
 
 
@@ -111,7 +145,7 @@ int main() {
     carta carta_desempilhada = desempilhar_baralho(&baralho_principal);
     insere_lista(&cartas_mesa, carta_desempilhada);
     print_lista(&cartas_mesa);
-
+   }
 
 
     carta carta_mao;
@@ -129,7 +163,7 @@ int main() {
         for(int i=0; i<num_jogadores; i++){
 
             
-            printf("\nJogada jogador %sAperte qualquere tecla para iniciar ", jogadores[i].nome);
+            printf("\nJOGADA JOGADOR %sAperte qualquere tecla para iniciar ", jogadores[i].nome);
             int c;
             while ((c = getchar()) != '\n' && c != EOF); // Limpa o buffer de entrada
             getchar();
@@ -140,7 +174,7 @@ int main() {
 
 
 
-            if(cartas_mesa->num_de_cartas == 0){
+            if(cartas_mesa.num_de_cartas == 0){
                 carta carta_desempilhada = desempilhar_baralho(&baralho_principal);
                 insere_lista(&cartas_mesa, carta_desempilhada);
             }
@@ -155,9 +189,16 @@ int main() {
                 if(k!=i)
                     print_montes(&jogadores[k], k);
             }
+            printf("\nTOPO DO SEU MONTE: \n");
+            if (jogadores[i].monte.topo != NULL) {
+              printf("|| %d %c ||\n", jogadores[i].monte.topo->carta.numero, jogadores[i].monte.topo->carta.nipe);
+              printf("Numero de cartas: %d\n", jogadores[i].numero_de_cartas);
+            } else {
+              printf("nao possui cartas\n");
+            }
 
             int op;
-            printf("\nQual jogada sera feita?\n1-Descarte\n2-Usar carta da mesa\n3-Roubar Monte\n");
+            printf("\nQual jogada sera feita?\n---1)Descarte\n---2)Usar carta da mesa\n---3)Roubar Monte\n---4)Inserir no topo do monte\n");
             scanf("%d", &op);
 
             switch (op){
@@ -174,19 +215,14 @@ int main() {
             case 2:
                 printf("Qual o indice da carta que sera usada?\n");
                 scanf("%d", &carta_jogada);
-<<<<<<< Updated upstream
-                aux_carta = carta_jogada;
-=======
->>>>>>> Stashed changes
-                carta_pesquisa = pesquisa_indice(&cartas_mesa, carta_jogada-1);
-                printf("Ate aqui");
+                carta_pesquisa = cartas_mesa.cartas[carta_jogada-1];
                 retorno_verificacao = verificacao(&carta_mao, &carta_pesquisa);
                 if(retorno_verificacao == 1){
                     printf("\njogada valida\n");
                     insere_monte_jogador(&jogadores[i], carta_mao);
                     insere_monte_jogador(&jogadores[i], carta_pesquisa);
-                    remover_lista(&cartas_mesa, carta_jogada-1);
-                    printf("Voce tem direito a uma nova jogada\n");
+                    retirar_carta_lista(&cartas_mesa, carta_jogada);
+                    printf("Voce tem direito a uma nova jogada!\n");
                     i--;
                 }else
                     printf("\nJogada invalida\n");
@@ -196,19 +232,30 @@ int main() {
             case 3:
                 printf("De qual jogador ira roubar o monte?\n");
                 scanf("%d", &jogador_monte_roubado);
-                for(int k=0; k<num_jogadores; k++){
-                    if(k!=i)
-                        if(k == jogador_monte_roubado){
-                        retorno_verificacao = verificacao(&carta_mao, &jogadores[k].monte.topo);
-                        if(retorno_verificacao == 1){
-                            roubar_monte(&jogadores[i], &jogadores[k]);
-                            insere_monte_jogador(&jogadores[i], carta_mao);
-                        }else{
-                            printf("Jogada invalida\n");
-                            printf("Cartas transferidas com sucesso para o monte do jogador atual.\n");
+                
+                    if(carta_mao.numero == jogadores[jogador_monte_roubado].monte.topo->carta.numero){
+                        printf("Jogada valida\n");
+                        roubar_monte(&jogadores[i], &jogadores[jogador_monte_roubado]);
+                        insere_monte_jogador(&jogadores[i], carta_mao);    
+                        printf("Cartas transferidas com sucesso para o monte do jogador atual.\n");
+                        printf("Voce tem direito a uma nova jogada!\n");
+                        i--;
+                    }else{
+                       printf("Jogada invalida\n");
+                    break;
+                    }
+                
+                case 4:
+                    if(carta_mao.numero == jogadores[i].monte.topo->carta.numero){
+                       printf("Jogada Valida\n");
+                       insere_monte_jogador(&jogadores[i], carta_mao);   
+                       printf("Voce tem direito a uma nova jogda!\n");
+                       i--;
+                       break;
+                    }else{
+                        printf("Jogada Invalida\n");
                         break;
-                        }
-                 }
+                    }
 
             }
 
@@ -216,9 +263,24 @@ int main() {
 
         }
       }
+      
+
+    for(int i = 0; i<30; i++){
+        printf("------");
     }
-  }
-   return 0;
+
+
+    int vencedor;
+    vencedor = jogador_campeao(jogadores, num_jogadores);
+    print_campeao(&jogadores[vencedor], vencedor);
+    print_montes(&jogadores[vencedor], vencedor);
+    
+    return 0;
 }
+ 
+
+
+
+        
 
    

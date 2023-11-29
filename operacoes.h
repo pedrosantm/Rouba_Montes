@@ -24,6 +24,11 @@ typedef struct pilha_dinamica{//pilha dinamica para representar cada monte de um
     elemento* topo;
 }pilha_dinamica;
 
+typedef struct{
+    carta cartas[54];
+    int inicio;
+    int num_de_cartas;
+}lista;
 
 typedef struct jogador{
     char nome[50];
@@ -31,12 +36,7 @@ typedef struct jogador{
     int numero_de_cartas;
 }jogador;
 
-typedef struct lista{
-    int vet[54];
-    int fim;
-    int inicio;
-    int num_de_cartas;
-}lista;
+
 
 ///////////////////////////////
 //inicialização
@@ -59,9 +59,9 @@ int inicializa_baralho(pilha *p){//cria o monte para o baralho
 }
 
 int inicializa_lista(lista* l){
-    l->inicio = NULL;
+    l->inicio = 0;
     l->num_de_cartas = 0;
-    if(l->inicio==NULL)
+    if(l->inicio==0)
         return 1;
     else 
         return 0;
@@ -109,10 +109,11 @@ carta desempilhar_baralho(pilha *baralho){
     return baralho->cartas[baralho->topo];
 }
 
-int inserir_lista(lista* l, int v){
-    l->vet[l->fim]=v;
-    l->fim++;
-    return 1;
+int insere_lista(lista* l, carta c){
+    l->cartas[l->inicio] = c;
+    l->inicio++;
+    l->num_de_cartas++;
+    return 1 ;
 }
 
 
@@ -135,38 +136,22 @@ int verificacao(carta* c1, carta* c2){
 }
 
 
-<<<<<<< Updated upstream
-carta pesquisa_indice(lista*l, int index){//função para retornar carna no indice indicado
-    elemento* aux = l->inicio;
-    int i = 0;
-    while( i < index && aux != NULL){
-        aux = aux->prox;
-        i++; 
+void retirar_carta_lista(lista* lista, int indice) {
+    indice = indice-1;
+    if (indice < 0 || indice >= lista->num_de_cartas) {
+        printf("Índice inválido.\n");
+        return;
     }
-    if(aux!= NULL){
-    return aux->carta;
-    }
-=======
-carta pesquisa_indice(lista* l, int index){
-    if(posicao<l->fim&&posicao<0)
-        return l->vet[posicao--];
 
->>>>>>> Stashed changes
+    for (int i = indice; i < lista->num_de_cartas - 1; i++) {
+        lista->cartas[i] = lista->cartas[i + 1];
+    }
+
+    lista->num_de_cartas--;
 }
 
 
-
-
-void remover_lista(lista* l, int* v){
-    l->fim--;
-    *v=l->vet[l->fim];
-    l->num_de_cartas--;
-    return ;
-}
-
-
-
-void retirar_carta_monte(jogador* j) {
+carta retirar_carta_monte(jogador* j) {
 
     elemento* carta_retirada = j->monte.topo;
     carta c = carta_retirada->carta;
@@ -179,20 +164,13 @@ void retirar_carta_monte(jogador* j) {
 
 
 void roubar_monte(jogador* jogador_atual, jogador* jogador_alvo) {
-    elemento* carta_transferida = jogador_alvo->monte.topo;
-    
-    if (carta_transferida == NULL) 
-        return;
-    
+    carta carta_retirada;
+    int control = jogador_alvo->numero_de_cartas;
 
-    while (carta_transferida != NULL) {
-        carta c = carta_transferida->carta;
-        insere_monte_jogador(jogador_atual, c); // Insere a carta no monte do jogador atual
-        if(jogador_alvo->monte.topo == NULL)
-            return;
-        retirar_carta_monte(&jogador_alvo); // Remove a carta do monte do jogador alvo
-        carta_transferida = jogador_alvo->monte.topo;
-    }
+   for(int i=0; i<control; i++){
+        carta_retirada = retirar_carta_monte(jogador_alvo);
+        insere_monte_jogador(jogador_atual, carta_retirada);
+   }
 
     return;
 }
@@ -209,14 +187,10 @@ void roubar_monte(jogador* jogador_atual, jogador* jogador_alvo) {
 
 
 
-void print_lista(lista* cartas){
-    elemento* aux = cartas->inicio;
-    int i = 1;
-    printf("As cartas da mesa sao:\n");
-     while(aux != NULL){
-            printf("%d - || %d   %c ||       ",i , aux->carta.numero, aux->carta.nipe);
-            aux = aux->anterior;
-            i++;
+void print_lista(lista* l){
+    printf("-------AS CARTAS DA MESA SAO-------\n");
+    for(int i = 0; i<l->num_de_cartas; i++){
+        printf("%d- || %d %c ||   ", i+1, l->cartas[i].numero, l->cartas[i].nipe);
     }
     return;
 }
