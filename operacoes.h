@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <malloc.h>
 #include <time.h>
+#include <string.h>
 
 
 typedef struct Carta {
@@ -10,7 +11,7 @@ typedef struct Carta {
 }carta;
 
 typedef struct Pilha {
-    struct Carta cartas[54];
+    struct Carta cartas[52];
     int topo;
 }pilha;
 
@@ -25,7 +26,7 @@ typedef struct pilha_dinamica{//pilha dinamica para representar cada monte de um
 }pilha_dinamica;
 
 typedef struct{
-    carta cartas[54];
+    carta cartas[52];
     int inicio;
     int num_de_cartas;
 }lista;
@@ -36,6 +37,14 @@ typedef struct jogador{
     int numero_de_cartas;
 }jogador;
 
+typedef struct elemento_ranking {
+    jogador *jogador;
+    struct elemento_ranking *prox;
+} elemento_ranking;
+
+typedef struct {
+    elemento_ranking *inicio;
+} lista_ranking;
 
 
 ///////////////////////////////
@@ -176,6 +185,64 @@ void roubar_monte(jogador* jogador_atual, jogador* jogador_alvo) {
 }
 
 
+void inserir_ordenado(lista *lista_jogador, pilha_dinamica monte_jogador) {
+    elemento *atual = monte_jogador.topo;
+
+    while (atual != NULL) {
+        elemento *novo = (elemento *)malloc(sizeof(elemento));
+        if (novo == NULL) {
+            return;
+        }
+        novo->carta = atual->carta;
+        novo->prox = NULL;
+
+            int posicao = 0;
+            while (posicao < lista_jogador->num_de_cartas && novo->carta.numero > lista_jogador->cartas[posicao].numero) {
+                posicao++;
+            }
+            for (int i = lista_jogador->num_de_cartas; i > posicao; i--) {
+                lista_jogador->cartas[i] = lista_jogador->cartas[i - 1];
+            }
+            lista_jogador->cartas[posicao] = novo->carta;
+            lista_jogador->inicio++;
+            lista_jogador->num_de_cartas++;
+            atual = atual->prox;
+    }
+
+    print_lista(lista_jogador);
+}
+
+
+
+void ordenar_ranking(lista_ranking *ranking, jogador *jogadores, int num_jogadores) {
+    // Criação de uma lista dinâmica temporária para ordenação
+    elemento_ranking *lista_temporaria = NULL;
+
+    for (int i = 0; i < num_jogadores; i++) {
+        elemento_ranking *novo_elemento = (elemento_ranking *)malloc(sizeof(elemento_ranking));
+
+        novo_elemento->jogador = &jogadores[i];
+        novo_elemento->prox = NULL;
+
+        // Inserção ordenada na lista temporária
+        if (lista_temporaria == NULL || jogadores[i].numero_de_cartas >= lista_temporaria->jogador->numero_de_cartas) {
+            novo_elemento->prox = lista_temporaria;
+            lista_temporaria = novo_elemento;
+        } else {
+            elemento_ranking *atual = lista_temporaria;
+            while (atual->prox != NULL && jogadores[i].numero_de_cartas < atual->prox->jogador->numero_de_cartas) {
+                atual = atual->prox;
+            }
+            novo_elemento->prox = atual->prox;
+            atual->prox = novo_elemento;
+        }
+    }
+
+    // Atualiza a lista de ranking com a lista temporária
+    ranking->inicio = lista_temporaria;
+    return;
+}
+
 
 
 
@@ -208,3 +275,15 @@ void print_montes(jogador* j, int k){
     }
 }
 
+void print_lista_dinamica(lista_ranking *ranking) {
+    printf("-----RANKING DOS JOGADORES-----\n");
+
+    elemento_ranking *atual = ranking->inicio;
+    int posicao = 1;
+
+    while (atual != NULL) {
+        printf("%d. %s - Número de cartas: %d\n", posicao, atual->jogador->nome, atual->jogador->numero_de_cartas);
+        atual = atual->prox;
+        posicao++;
+    }
+}
