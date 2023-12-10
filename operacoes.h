@@ -25,19 +25,19 @@ typedef struct pilha_dinamica{//pilha dinamica para representar cada monte de um
     elemento* topo;
 }pilha_dinamica;
 
-typedef struct{
+typedef struct{//lista para representar as cartas da mesa
     carta cartas[52];
     int inicio;
     int num_de_cartas;
 }lista;
 
-typedef struct jogador{
+typedef struct jogador{//estrutura para conter todos os elementos dos jogadores
     char nome[50];
     pilha_dinamica monte;
     int numero_de_cartas;
 }jogador;
 
-typedef struct elemento_ranking {
+typedef struct elemento_ranking {//lista para ranking final
     jogador *jogador;
     struct elemento_ranking *prox;
 } elemento_ranking;
@@ -51,7 +51,7 @@ typedef struct {
 //inicialização
 
 
-int inicializa_monte(pilha_dinamica* p){//cria o monte dos jogadores
+int inicializa_monte(pilha_dinamica* p){
     p->topo=0;
     if(p->topo==0)
         return 1;
@@ -59,7 +59,7 @@ int inicializa_monte(pilha_dinamica* p){//cria o monte dos jogadores
         return 0;
 }
 
-int inicializa_baralho(pilha *p){//cria o monte para o baralho
+int inicializa_baralho(pilha *p){
     p->topo=0;
     if(p->topo==0){
         return 1;
@@ -97,7 +97,7 @@ void embaralharPilha(pilha *baralho) {
     
     // Embaralha a pilha 
     for (int i = baralho->topo - 1; i > 0; i--) {
-        int j = rand() % 54;
+        int j = rand() % 52;
         carta aux = baralho->cartas[i];
         baralho->cartas[i] = baralho->cartas[j];
         baralho->cartas[j] = aux;
@@ -138,7 +138,7 @@ void insere_monte_jogador(jogador* j, carta c){
 }
 
 int verificacao(carta* c1, carta* c2){
-    if(c1->numero == c2->numero)
+    if(c1->numero == c2->numero)//compara os numeros das duas cartas passadas por referencia
         return 1;
     else 
         return 0;
@@ -146,26 +146,27 @@ int verificacao(carta* c1, carta* c2){
 
 
 void retirar_carta_lista(lista* lista, int indice) {
-    indice = indice-1;
-    if (indice < 0 || indice >= lista->num_de_cartas) {
+    indice = indice-1;//decrementa o indice para acessar corretamente
+    if (indice < 0 || indice >= lista->num_de_cartas) {//verifica a validade do indice
         printf("Índice inválido.\n");
         return;
     }
 
-    for (int i = indice; i < lista->num_de_cartas - 1; i++) {
+    for (int i = indice; i < lista->num_de_cartas - 1; i++) {//muda a posicao das cartas para sobrepor uma a outra e assim excluir a carta do indice
         lista->cartas[i] = lista->cartas[i + 1];
     }
 
     lista->num_de_cartas--;
+    return;
 }
 
 
 carta retirar_carta_monte(jogador* j) {
 
-    elemento* carta_retirada = j->monte.topo;
+    elemento* carta_retirada = j->monte.topo;//retira carta do topo do monte
     carta c = carta_retirada->carta;
-    j->monte.topo = carta_retirada->anterior;
-    free(carta_retirada);
+    j->monte.topo = carta_retirada->anterior;//faz o topo receber a carta anterior
+    free(carta_retirada);//libera a carta
     j->numero_de_cartas--;
     return c;
 }
@@ -174,9 +175,9 @@ carta retirar_carta_monte(jogador* j) {
 
 void roubar_monte(jogador* jogador_atual, jogador* jogador_alvo) {
     carta carta_retirada;
-    int control = jogador_alvo->numero_de_cartas;
+    int control = jogador_alvo->numero_de_cartas;//variavel de controle
 
-   for(int i=0; i<control; i++){
+   for(int i=0; i<control; i++){//passa por toda a lista removendo os elementos e inseirindo no monte do jogador
         carta_retirada = retirar_carta_monte(jogador_alvo);
         insere_monte_jogador(jogador_atual, carta_retirada);
    }
@@ -186,13 +187,11 @@ void roubar_monte(jogador* jogador_atual, jogador* jogador_alvo) {
 
 
 void inserir_ordenado(lista *lista_jogador, pilha_dinamica monte_jogador) {
-    elemento *atual = monte_jogador.topo;
+    elemento *atual = monte_jogador.topo;//cria elemento auxiliar 
 
     while (atual != NULL) {
-        elemento *novo = (elemento *)malloc(sizeof(elemento));
-        if (novo == NULL) {
-            return;
-        }
+        elemento *novo = (elemento *)malloc(sizeof(elemento));//aloca memoria para um novo elemento
+
         novo->carta = atual->carta;
         novo->prox = NULL;
 
@@ -215,8 +214,8 @@ void inserir_ordenado(lista *lista_jogador, pilha_dinamica monte_jogador) {
 
 
 void ordenar_ranking(lista_ranking *ranking, jogador *jogadores, int num_jogadores) {
-    // Criação de uma lista dinâmica temporária para ordenação
-    elemento_ranking *lista_temporaria = NULL;
+
+    elemento_ranking *lista_temporaria = NULL; // Criação de uma lista dinâmica temporária para ordenação
 
     for (int i = 0; i < num_jogadores; i++) {
         elemento_ranking *novo_elemento = (elemento_ranking *)malloc(sizeof(elemento_ranking));
@@ -238,8 +237,7 @@ void ordenar_ranking(lista_ranking *ranking, jogador *jogadores, int num_jogador
         }
     }
 
-    // Atualiza a lista de ranking com a lista temporária
-    ranking->inicio = lista_temporaria;
+    ranking->inicio = lista_temporaria;// Atualiza a lista de ranking com a lista temporária
     return;
 }
 
@@ -256,7 +254,7 @@ void ordenar_ranking(lista_ranking *ranking, jogador *jogadores, int num_jogador
 
 void print_lista(lista* l){
     printf("-------AS CARTAS DA MESA SAO-------\n");
-    for(int i = 0; i<l->num_de_cartas; i++){
+    for(int i = 0; i<l->num_de_cartas; i++){//caminha por toda a lista printando as cartas
         printf("%d- || %d %c ||   ", i+1, l->cartas[i].numero, l->cartas[i].nipe);
     }
     return;
@@ -264,13 +262,13 @@ void print_lista(lista* l){
 
 
 void print_montes(jogador* j, int k){
-    elemento* aux = j->monte.topo;
+    elemento* aux = j->monte.topo;//cria elemento auxiliar apontando para o topo
     if(j->numero_de_cartas == 0){
         printf("%d - Monte do jogador %sNao possui cartas\n", k , j->nome);
         return;
       }else{
         printf("%d - Monte do jogador %s|| %d %c ||\n", k , j->nome, aux->carta.numero, aux->carta.nipe);
-        printf("Numero de cartas: %d\n", j->numero_de_cartas);
+        printf("Numero de cartas: %d\n", j->numero_de_cartas);//printa a carta do topo
         return;
     }
 }
@@ -278,11 +276,11 @@ void print_montes(jogador* j, int k){
 void print_lista_dinamica(lista_ranking *ranking) {
     printf("-----RANKING DOS JOGADORES-----\n");
 
-    elemento_ranking *atual = ranking->inicio;
+    elemento_ranking *atual = ranking->inicio;//auxiliar apontando para o inicio
     int posicao = 1;
 
-    while (atual != NULL) {
-        printf("%d. %s - Número de cartas: %d\n", posicao, atual->jogador->nome, atual->jogador->numero_de_cartas);
+    while (atual != NULL) {//percorre toda a lista
+        printf("%d. %s - Número de cartas: %d\n", posicao, atual->jogador->nome, atual->jogador->numero_de_cartas);//printa os elementos da lista
         atual = atual->prox;
         posicao++;
     }

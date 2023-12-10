@@ -9,7 +9,7 @@
 
 int main() {
     
-    int num_jogadores = 0;
+    int num_jogadores = 0;//variaveis globais
     int num_baralhos = 0;
     int retorno_insere_lista;
     carta carta_pesquisa;
@@ -49,7 +49,7 @@ int main() {
    
     jogador *jogadores = (jogador *)malloc(num_jogadores * sizeof(jogador));//cria um array dinamico com o numero de jogadores selecionado
     pilha *baralho = (pilha *)malloc(num_baralhos * sizeof(pilha));//cria um array dinamico com os baralhos
-    lista cartas_mesa;
+    lista cartas_mesa;//cria as cartas da mesa
 
 
 
@@ -87,18 +87,17 @@ int main() {
         printf("Erro inicializacao de baralho");
         return 0;
     }else{
-    for(int i = 0; i < num_baralhos; i++) {
         for (int numero = 1; numero <= 13; numero++) {
-            for (int j = 0; j<4; j++) {
+            for (int nipe = 0; nipe<4; nipe++) {
                 carta c;
                 c.numero = numero;
-                c.nipe = np[j];
+                c.nipe = np[nipe];
                 empilhar_baralho(&baralho[b], c);//empilha as cartas no baralho principal
             }
-        }
+        
    }
   }
-  embaralharPilha(&baralho[b]);
+  embaralharPilha(&baralho[b]);//embaralhamento
  }
 
 
@@ -110,7 +109,7 @@ int main() {
 
 ///////////////////////////////////////////////
 
-    carta carta_mao;
+    carta carta_mao;//variavel da carta da vez
 
 
     printf("CADA JOGADOR RETIRA UMA CARTA\n");
@@ -120,34 +119,34 @@ int main() {
     while ((c = getchar()) != '\n' && c != EOF); // Limpa o buffer de entrada
     getchar();
 
-    carta_mao = desempilhar_baralho(&baralho[0]);
+    carta_mao = desempilhar_baralho(&baralho[0]);//desempilha do baralho
     printf(">>Sua carta e:\n");
     printf("|| %d %c ||\n", carta_mao.numero, carta_mao.nipe);
-    insere_monte_jogador(&jogadores[i], carta_mao);
+    insere_monte_jogador(&jogadores[i], carta_mao);//insere no monte do jogador
     }
 
    int retorno_inicializa_cartas_comunitarias = inicializa_lista(&cartas_mesa);
    if(retorno_inicializa_cartas_comunitarias == 0)
     printf("Erro inicializacao lista");
    else{
-    carta carta_desempilhada = desempilhar_baralho(&baralho[0]);
+    carta carta_desempilhada = desempilhar_baralho(&baralho[0]);//desempilha baralho e insere na mesa
     insere_lista(&cartas_mesa, carta_desempilhada);
     print_lista(&cartas_mesa);
    }
 
-    int QTD_CARTAS_MIN = 52;
-    int QTD_CARTAS_MAX = (num_baralhos*52)-num_jogadores;
+    int QTD_CARTAS_MIN = 52;//variaveis que controlam a quantidade de jogadas, esta por cada baralho
+    int QTD_CARTAS_MAX = (num_baralhos*52)-num_jogadores;//variaveis que controlam a quantidade de jogadas, esta para cartas no total
 
 
     for(int b = 0; b<num_baralhos; b++){
-
+                                        //roda a quantidade de jogadas de acordo com o numero de cartas
         while( QTD_CARTAS_MIN > 0) {
 
 
             for(int i=0; i<num_jogadores; i++){
 
                     
-                if(QTD_CARTAS_MAX == 1)
+                if(QTD_CARTAS_MAX == 0)
                         printf("\nUltima rodada\n");
                     else
                         printf("\nCartas no baralho: %d\n", QTD_CARTAS_MAX);
@@ -166,7 +165,7 @@ int main() {
 
 
 
-                    if(cartas_mesa.num_de_cartas == 0){
+                    if(cartas_mesa.num_de_cartas == 0){//quando nao ha cartas na mesa uma é obrigatoriamente tirada
                         carta carta_desempilhada = desempilhar_baralho(&baralho[b]);
                         insere_lista(&cartas_mesa, carta_desempilhada);
                     }
@@ -189,13 +188,13 @@ int main() {
                     printf("nao possui cartas\n");
                     }
 
-                    int op;
+                    int op;//escolha do jogador por qual jogada sera feita
                     printf("\nQual jogada sera feita?\n---1)Descarte\n---2)Usar carta da mesa\n---3)Roubar Monte\n---4)Inserir no topo do monte\n");
                     scanf("%d", &op);
 
                     switch (op){
                     
-                    case 1:
+                    case 1://insere na lista
                         retorno_insere_lista = insere_lista(&cartas_mesa, carta_mao);
                         if(retorno_insere_lista == 1)
                             printf("Jogada realizada!\n");
@@ -204,55 +203,61 @@ int main() {
             
                         break;
 
-                    case 2:
+                    case 2://usar carta da mesa
                         printf("Qual o indice da carta que sera usada?\n");
                         scanf("%d", &carta_jogada);
-                        carta_pesquisa = cartas_mesa.cartas[carta_jogada-1];
-                        retorno_verificacao = verificacao(&carta_mao, &carta_pesquisa);
+                        carta_pesquisa = cartas_mesa.cartas[carta_jogada-1];//pesquisa na lista
+                        retorno_verificacao = verificacao(&carta_mao, &carta_pesquisa);//verifica se os numeros sao iguais
                         if(retorno_verificacao == 1){
                             printf("\njogada valida\n");
                             insere_monte_jogador(&jogadores[i], carta_mao);
                             insere_monte_jogador(&jogadores[i], carta_pesquisa);
                             retirar_carta_lista(&cartas_mesa, carta_jogada);
                             printf("Voce tem direito a uma nova jogada!\n");
-                            i--;
+                            i--;//decrementa o "i" para o jogador repetir a jogada
                         }else
-                            printf("\nJogada invalida\n");
+                            printf("\nJogada invalida\n");//se a jogada for invalida a carta é inserida na lista
+                            retorno_insere_lista = insere_lista(&cartas_mesa, carta_mao);
+                            printf("Carta inserida na mesa\n");
 
                         break;
 
-                    case 3:
+                    case 3://roubar monte do jogador
                         printf("De qual jogador ira roubar o monte?\n");
                         scanf("%d", &jogador_monte_roubado);
                         
-                            if(carta_mao.numero == jogadores[jogador_monte_roubado].monte.topo->carta.numero){
+                            if(carta_mao.numero == jogadores[jogador_monte_roubado].monte.topo->carta.numero){//compara para validação da jogada
                                 printf("Jogada valida\n");
-                                roubar_monte(&jogadores[i], &jogadores[jogador_monte_roubado]);
-                                insere_monte_jogador(&jogadores[i], carta_mao);    
+                                roubar_monte(&jogadores[i], &jogadores[jogador_monte_roubado]);//rouba o monte
+                                insere_monte_jogador(&jogadores[i], carta_mao);//insere a carta da vez
                                 printf("Cartas transferidas com sucesso para o monte do jogador atual.\n");
                                 printf("Voce tem direito a uma nova jogada!\n");
-                                i--;
+                                i--;//decrementa o "i" para o jogador repetir a jogada
                             }else{
-                            printf("Jogada invalida\n");
+                            printf("Jogada invalida\n");//se a jogada for invalida a carta é inserida na lista
+                            retorno_insere_lista = insere_lista(&cartas_mesa, carta_mao);
+                            printf("Carta inserida na mesa\n");
                             break;
                             }
                         
-                        case 4:
-                            if(carta_mao.numero == jogadores[i].monte.topo->carta.numero){
+                        case 4://insere a carta no topo do monte
+                            if(carta_mao.numero == jogadores[i].monte.topo->carta.numero){//compara para validação da jogada
                             printf("Jogada Valida\n");
-                            insere_monte_jogador(&jogadores[i], carta_mao);   
+                            insere_monte_jogador(&jogadores[i], carta_mao);//insere no monte
                             printf("Voce tem direito a uma nova jogda!\n");
-                            i--;
+                            i--;//decrementa o "i" para o jogador repetir a jogada
                             break;
                             }else{
-                                printf("Jogada Invalida\n");
+                                printf("Jogada Invalida\n");//se a jogada for invalida a carta é inserida na lista
+                                retorno_insere_lista = insere_lista(&cartas_mesa, carta_mao);
+                                printf("Carta inserida na mesa\n");
                                 break;
                             }
 
                     }
 
                 
-            QTD_CARTAS_MAX--;
+            QTD_CARTAS_MAX--;//decrementa as variaveis de controle
             }
 
         QTD_CARTAS_MIN--;
@@ -261,7 +266,7 @@ int main() {
     }
 
 
-    int max = jogadores[0].numero_de_cartas;
+    int max = jogadores[0].numero_de_cartas;//define o jogador com maior numero de cartas
     int vencedor = 0;
     for(int i = 1; i<num_jogadores; i++){
       if(jogadores[i].numero_de_cartas>max){
@@ -272,24 +277,24 @@ int main() {
 
     printf("Jogador/es campeao/es:\n");
     printf("%s\n", jogadores[vencedor].nome);
-    lista lista_jogador;
-    inserir_ordenado(&lista_jogador, jogadores[vencedor].monte);
+    lista lista_jogador;//cria lista para o jogador
+    inserir_ordenado(&lista_jogador, jogadores[vencedor].monte);//ordena na lista
 
 
 
-    for(int i = 0; i < num_jogadores; i++){
+    for(int i = 0; i < num_jogadores; i++){//verifica se existem outros campeoes
         if(i!=vencedor){
             if(jogadores[i].numero_de_cartas == jogadores[vencedor].numero_de_cartas){
                  printf("%s\n", jogadores[i].nome);
-                 lista lista_jogador;
-                 inserir_ordenado(&lista_jogador, jogadores[i].monte);
+                 lista lista_jogador;//cria lista para o jogador
+                 inserir_ordenado(&lista_jogador, jogadores[i].monte);//ordena na lista
             }
         }
     }
 
 
-    lista_ranking* ranking = (lista_ranking*)malloc(sizeof(lista_ranking));
-    ordenar_ranking(ranking, jogadores, num_jogadores);
+    lista_ranking* ranking = (lista_ranking*)malloc(sizeof(lista_ranking));//cria lista para ranking
+    ordenar_ranking(ranking, jogadores, num_jogadores);//ordena a lista de acordo com o ranking
     print_lista_dinamica(&ranking);
 
     printf("\n\n");
