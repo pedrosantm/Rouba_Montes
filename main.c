@@ -215,10 +215,11 @@ int main() {
                             retirar_carta_lista(&cartas_mesa, carta_jogada);
                             printf("Voce tem direito a uma nova jogada!\n");
                             i--;//decrementa o "i" para o jogador repetir a jogada
-                        }else
+                        }else{
                             printf("\nJogada invalida\n");//se a jogada for invalida a carta é inserida na lista
                             retorno_insere_lista = insere_lista(&cartas_mesa, carta_mao);
                             printf("Carta inserida na mesa\n");
+                        }
 
                         break;
 

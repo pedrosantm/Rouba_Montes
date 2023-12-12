@@ -25,7 +25,7 @@ typedef struct pilha_dinamica{//pilha dinamica para representar cada monte de um
     elemento* topo;
 }pilha_dinamica;
 
-typedef struct{//lista para representar as cartas da mesa
+typedef struct lista{//lista para representar as cartas da mesa
     carta cartas[52];
     int inicio;
     int num_de_cartas;
@@ -152,7 +152,7 @@ void retirar_carta_lista(lista* lista, int indice) {
         return;
     }
 
-    for (int i = indice; i < lista->num_de_cartas - 1; i++) {//muda a posicao das cartas para sobrepor uma a outra e assim excluir a carta do indice
+    for (int i = indice; i < lista->num_de_cartas ; i++) {//muda a posicao das cartas para sobrepor uma a outra e assim excluir a carta do indice
         lista->cartas[i] = lista->cartas[i + 1];
     }
 
