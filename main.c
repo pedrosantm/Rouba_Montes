@@ -235,11 +235,11 @@ int main() {
                                 printf("Voce tem direito a uma nova jogada!\n");
                                 i--;//decrementa o "i" para o jogador repetir a jogada
                             }else{
-                            printf("Jogada invalida\n");//se a jogada for invalida a carta é inserida na lista
-                            retorno_insere_lista = insere_lista(&cartas_mesa, carta_mao);
-                            printf("Carta inserida na mesa\n");
-                            break;
+                                printf("Jogada invalida\n");//se a jogada for invalida a carta é inserida na lista
+                                retorno_insere_lista = insere_lista(&cartas_mesa, carta_mao);
+                                printf("Carta inserida na mesa\n");
                             }
+                            break;
                         
                         case 4://insere a carta no topo do monte
                             if(carta_mao.numero == jogadores[i].monte.topo->carta.numero){//compara para validação da jogada
