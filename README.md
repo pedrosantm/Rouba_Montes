@@ -1,5 +1,5 @@
 # Rouba_Montes
- Jogo Rouba Montes em Linguagem C em desenvolvimento
+ Jogo Rouba Montes em Linguagem C
 
  #Regras do jogo
  Um dos jogos de cartas mais divertidos para crianças, pela simplicidade, é o Rouba- Monte. O jogo utiliza um ou mais baralhos normais e tem regras muito simples. Cartas são distinguidas apenas pelo valor (ás, dois, três, . . .), ou seja, os naipes das cartas não são considerados (por exemplo, ás de paus e ás de ouro têm o mesmo valor).
